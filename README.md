@@ -1,4 +1,5 @@
 # Repositorio de Ejercicios en MySQLWorkbench para la Base de Datos Sakila
+(simulacion de una tienda de alquiler de 📽🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞🎞)
 
 ### Hola 👋 !!!
 
