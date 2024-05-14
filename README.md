@@ -21,6 +21,6 @@ Este repositorio contiene ejercicios realizados en MySQLWorkbench utilizando la 
 
 ### Contribuciones: 🤝
 
-¡Las contribuciones son bienvenidas! Si deseas agregar más ejercicios, mejorar la documentación o corregir errores, no dudes en hacer una solicitud de extracción.
+¡Las contribuciones son bienvenidas! Si deseas agregar más ejercicios, mejorar la documentación o corregir errores, adelante.
 
 ¡Espero que encuentres útil este repositorio! 😊
