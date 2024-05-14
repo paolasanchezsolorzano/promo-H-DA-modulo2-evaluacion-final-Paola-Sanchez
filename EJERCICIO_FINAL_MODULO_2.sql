@@ -201,9 +201,23 @@ SELECT title, rental_duration                                          							  
 FROM film
 WHERE film_id IN (SELECT film_id																	-- SELECT (rental_id) FROM rental
 				  FROM rental
-                  GROUP BY rental_id
+                  GROUP BY film_id
                   HAVING film.rental_duration > 5
                   ORDER BY title);
+                  
+   -- ---------------------------- return_date and rental_date-------------------------- --       
+   
+SELECT F.title, DATEDIFF(R.return_date, R.rental_date) AS dias_rentados, R.rental_id
+FROM film AS F
+LEFT JOIN inventory AS I 
+ON F.film_id = I.film_id                                                                        -- SELECT DATEDIFF(return_date, rental_date) AS dias_diferencia
+LEFT JOIN rental AS R																			-- 	FROM sakila.rental
+ON I.inventory_id = R.inventory_id
+WHERE DATEDIFF(R.return_date, R.rental_date) > 5
+GROUP BY R.rental_id, dias_rentados
+ORDER BY F.title;
+                  
+	
 
 /* 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la 
 categoría "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en 
@@ -248,18 +262,16 @@ WHERE CAT.name = 'action' AND  F.length > 180;
 
 /* 25. Encuentra todos los actores que han actuado juntos en al menos una película. La 
 consulta debe mostrar el nombre y apellido de los actores y el número de películas en las que 
-han actuado juntos.
+han actuado juntos.*/
 
-Es una CTE que toma las dos tablas que relacionan los actores con los films,
- le doy alias para que se vea en orden */ 
-
-
-WITH ActoresEnPeliculas AS (SELECT ACT.actor_id, ACT.first_name, ACT.last_name, F_ACT.film_id
-							FROM actor AS ACT             									 -- SELECT (actor_id),first_name,last_name FROM actor
-							INNER JOIN film_actor
-                            AS F_ACT                      									 --  SELECT (actor_id),film_id FROM film_actor
-                            ON ACT.actor_id = F_ACT.actor_id)
-                            
-SELECT first_name, last_name, COUNT(DISTINCT film_id) AS num_peliculas  					-- muestra las combinaciones de actores que han trabajado juntos
-FROM ActoresEnPeliculas												     					-- en al menos una película distinta. 
-GROUP BY actor_id, first_name, last_name;
+-- ------------------------------------------------------------------ --
+SELECT CONCAT(A1.first_name, " ", A1.last_name) AS Actor1,
+       CONCAT(A2.first_name, " ", A2.last_name) AS Actor2, 
+       COUNT(DISTINCT F_ACT1.film_id) AS numero_peliculas_juntos
+FROM film_actor AS F_ACT1
+INNER JOIN actor AS A1 ON F_ACT1.actor_id = A1.actor_id
+INNER JOIN film_actor AS F_ACT2 ON F_ACT1.film_id = F_ACT2.film_id 
+AND F_ACT1.actor_id < F_ACT2.actor_id
+INNER JOIN actor AS A2 ON F_ACT2.actor_id = A2.actor_id
+GROUP BY A1.actor_id, A2.actor_id
+HAVING numero_peliculas_juntos >= 1;
